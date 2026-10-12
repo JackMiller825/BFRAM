@@ -1,0 +1,82 @@
+[
+  {
+    "filename": "01-bfram-home-overview-desktop.png",
+    "page": "/",
+    "section": "Homepage",
+    "purpose": "Full desktop overview",
+    "width": 883,
+    "height": 1781
+  },
+  {
+    "filename": "02-bfram-home-hero-desktop.png",
+    "page": "/",
+    "section": "Hero",
+    "purpose": "Headline, mascots, calls to action",
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "filename": "03-bfram-home-story-desktop.png",
+    "page": "/",
+    "section": "Story",
+    "purpose": "Character cards and fictional origin",
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "filename": "04-bfram-home-token-desktop.png",
+    "page": "/",
+    "section": "Token",
+    "purpose": "Confirmed identity and pending fields",
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "filename": "05-bfram-home-how-to-buy-desktop.png",
+    "page": "/",
+    "section": "How to buy",
+    "purpose": "Four-step guide",
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "filename": "06-bfram-home-community-desktop.png",
+    "page": "/",
+    "section": "Community",
+    "purpose": "Local team selector and social links",
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "filename": "07-bfram-home-faq-desktop.png",
+    "page": "/",
+    "section": "FAQ",
+    "purpose": "Expanded accordion state",
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "filename": "08-bfram-home-overview-mobile.png",
+    "page": "/",
+    "section": "Homepage mobile",
+    "purpose": "Three consecutive scroll segments",
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "filename": "09-bfram-shared-navigation.png",
+    "page": "/",
+    "section": "Shared navigation",
+    "purpose": "Desktop and mobile open/closed states",
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "filename": "10-bfram-shared-footer.png",
+    "page": "/",
+    "section": "Shared footer",
+    "purpose": "Desktop and mobile footer",
+    "width": 1536,
+    "height": 1024
+  }
+]

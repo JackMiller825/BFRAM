@@ -1,0 +1,7 @@
+Name: BuffaRumble
+Ticker: $BFRAM
+
+BuffaRumble combines buffalo with rumble; BFRAM brings buffalo and ram together.
+Visual identity: Rust-brown buffalo and cream ram, tiny orange and teal helmets, friendly football rivalry.
+Palette: Orange, teal, cream, dark chocolate.
+Independent fictional sports mascots; no team or league affiliation implied.

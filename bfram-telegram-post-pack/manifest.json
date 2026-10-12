@@ -1,0 +1,62 @@
+[
+  {
+    "image": "01-bfram-tg-welcome.png",
+    "caption": "01-bfram-tg-welcome.txt",
+    "width": 1100,
+    "height": 520
+  },
+  {
+    "image": "02-bfram-tg-pick-your-side.png",
+    "caption": "02-bfram-tg-pick-your-side.txt",
+    "width": 1100,
+    "height": 520
+  },
+  {
+    "image": "03-bfram-tg-tiny-helmets.png",
+    "caption": "03-bfram-tg-tiny-helmets.txt",
+    "width": 1100,
+    "height": 520
+  },
+  {
+    "image": "04-bfram-tg-caption-this.png",
+    "caption": "04-bfram-tg-caption-this.txt",
+    "width": 1100,
+    "height": 520
+  },
+  {
+    "image": "05-bfram-tg-football-interview.png",
+    "caption": "05-bfram-tg-football-interview.txt",
+    "width": 1100,
+    "height": 520
+  },
+  {
+    "image": "06-bfram-tg-training-day.png",
+    "caption": "06-bfram-tg-training-day.txt",
+    "width": 1100,
+    "height": 520
+  },
+  {
+    "image": "07-bfram-tg-snack-truce.png",
+    "caption": "07-bfram-tg-snack-truce.txt",
+    "width": 1100,
+    "height": 520
+  },
+  {
+    "image": "08-bfram-tg-gm-herd.png",
+    "caption": "08-bfram-tg-gm-herd.txt",
+    "width": 1100,
+    "height": 520
+  },
+  {
+    "image": "09-bfram-tg-meme-workshop.png",
+    "caption": "09-bfram-tg-meme-workshop.txt",
+    "width": 1100,
+    "height": 520
+  },
+  {
+    "image": "10-bfram-tg-bring-a-friend.png",
+    "caption": "10-bfram-tg-bring-a-friend.txt",
+    "width": 1100,
+    "height": 520
+  }
+]

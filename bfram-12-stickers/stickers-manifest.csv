@@ -1,0 +1,13 @@
+number,emotion,master_path,master_dimensions,master_transparency,chat_path,chat_dimensions,chat_transparency
+001,happy,masters-1024/001-bfram-happy.png,1024x1024,yes (RGBA; transparent pixels verified),chat-512/001-bfram-happy.png,512x512,yes (RGBA; transparent pixels verified)
+002,laughing,masters-1024/002-bfram-laughing.png,1024x1024,yes (RGBA; transparent pixels verified),chat-512/002-bfram-laughing.png,512x512,yes (RGBA; transparent pixels verified)
+003,excited,masters-1024/003-bfram-excited.png,1024x1024,yes (RGBA; transparent pixels verified),chat-512/003-bfram-excited.png,512x512,yes (RGBA; transparent pixels verified)
+004,sad,masters-1024/004-bfram-sad.png,1024x1024,yes (RGBA; transparent pixels verified),chat-512/004-bfram-sad.png,512x512,yes (RGBA; transparent pixels verified)
+005,angry,masters-1024/005-bfram-angry.png,1024x1024,yes (RGBA; transparent pixels verified),chat-512/005-bfram-angry.png,512x512,yes (RGBA; transparent pixels verified)
+006,scared,masters-1024/006-bfram-scared.png,1024x1024,yes (RGBA; transparent pixels verified),chat-512/006-bfram-scared.png,512x512,yes (RGBA; transparent pixels verified)
+007,shocked,masters-1024/007-bfram-shocked.png,1024x1024,yes (RGBA; transparent pixels verified),chat-512/007-bfram-shocked.png,512x512,yes (RGBA; transparent pixels verified)
+008,confused,masters-1024/008-bfram-confused.png,1024x1024,yes (RGBA; transparent pixels verified),chat-512/008-bfram-confused.png,512x512,yes (RGBA; transparent pixels verified)
+009,smug,masters-1024/009-bfram-smug.png,1024x1024,yes (RGBA; transparent pixels verified),chat-512/009-bfram-smug.png,512x512,yes (RGBA; transparent pixels verified)
+010,embarrassed,masters-1024/010-bfram-embarrassed.png,1024x1024,yes (RGBA; transparent pixels verified),chat-512/010-bfram-embarrassed.png,512x512,yes (RGBA; transparent pixels verified)
+011,loving,masters-1024/011-bfram-loving.png,1024x1024,yes (RGBA; transparent pixels verified),chat-512/011-bfram-loving.png,512x512,yes (RGBA; transparent pixels verified)
+012,tired,masters-1024/012-bfram-tired.png,1024x1024,yes (RGBA; transparent pixels verified),chat-512/012-bfram-tired.png,512x512,yes (RGBA; transparent pixels verified)
