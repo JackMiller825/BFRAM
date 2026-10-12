@@ -12,7 +12,7 @@
  *
  * Telegram, X, chart, explorer, and site URLs enable their own controls when
  * they are valid https links. siteUrl also emits absolute canonical and
- * social-image URLs at build time. It is the GitHub Pages project URL.
+ * social-image URLs at build time. It is the public GitHub Pages domain.
  */
 
 export const PENDING = 'Pending confirmation'
@@ -62,7 +62,7 @@ export const tokenConfig: TokenConfig = {
   tradeUrl: null,
   chartUrl: null,
   explorerUrl: null,
-  siteUrl: 'https://jackmiller825.github.io/BFRAM',
+  siteUrl: 'https://bfram.site',
   contractConfirmed: false,
   tradingConfirmed: false,
 }

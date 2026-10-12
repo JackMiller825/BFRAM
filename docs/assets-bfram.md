@@ -46,4 +46,4 @@ These files were not in the supplied packs and are not referenced as if they exi
 
 ## Social URL configuration
 
-`siteUrl` in `src/config/token.ts` is `https://jackmiller825.github.io/BFRAM`. The production build emits absolute canonical, `og:url`, and social-image URLs. The social image is the 1100 × 520 banner.
+`siteUrl` in `src/config/token.ts` is `https://bfram.site`. The production build emits absolute canonical, `og:url`, and social-image URLs. The social image is the 1100 × 520 banner.

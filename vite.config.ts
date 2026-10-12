@@ -14,7 +14,7 @@ function metadataPlugin(): Plugin {
 }
 
 export default defineConfig({
-  base: '/BFRAM/',
+  base: '/',
   plugins: [react(), metadataPlugin()],
   test: {
     environment: 'jsdom',

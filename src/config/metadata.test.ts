@@ -3,14 +3,14 @@ import { applyMetadata, canonicalTags, escapeAttr, pageDescription, pageTitle, s
 import { tokenConfig, type TokenConfig } from './token'
 
 describe('page metadata', () => {
-  it('uses the approved title and description with the GitHub Pages URL', () => {
+  it('uses the approved title and description with the public site URL', () => {
     expect(pageTitle(tokenConfig)).toBe('BuffaRumble ($BFRAM) | Big horns. Tiny helmets.')
     expect(pageDescription(tokenConfig)).toBe(
       'Meet BuffaRumble ($BFRAM), an independent Ethereum meme community. Pick Team Buffalo or Team Ram. Big horns. Tiny helmets. Maximum rumble.',
     )
-    expect(canonicalTags(tokenConfig)).toContain('href="https://jackmiller825.github.io/BFRAM/"')
+    expect(canonicalTags(tokenConfig)).toContain('href="https://bfram.site/"')
     expect(socialImageUrl(tokenConfig)).toBe(
-      'https://jackmiller825.github.io/BFRAM/assets/bfram/bfram-banner-1100x520.png',
+      'https://bfram.site/assets/bfram/bfram-banner-1100x520.png',
     )
   })
 
