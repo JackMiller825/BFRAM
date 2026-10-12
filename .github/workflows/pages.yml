@@ -29,13 +29,13 @@ jobs:
         run: npm ci
       - name: Build
         env:
-          VITE_BASE: ${{ github.repository == 'JackMiller825/BFRAM' && '/' || '/Token-Campaign-Studio/' }}
+          VITE_BASE: /
           VITE_SITE: ${{ github.repository == 'JackMiller825/BFRAM' && 'marketing' || 'studio' }}
         run: npm run build
-      - name: Publish the studio preview on its project URL
+      - name: Publish the studio preview on its domain
         if: github.repository != 'JackMiller825/BFRAM'
         run: |
-          rm -f dist/CNAME
+          printf '%s\n' 'token-campaign-studio.site' > dist/CNAME
           if [ -f dist/studio.html ]; then
             mv dist/index.html dist/bfram.html
             mv dist/studio.html dist/index.html

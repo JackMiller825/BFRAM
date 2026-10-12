@@ -57,7 +57,7 @@ Optional environment variables live in `.env` (see `.env.example`). The server r
 
 The database is `data/studio.json`, created on first run and gitignored. Uploads go in `data/uploads/`. Restarting the server keeps the database and drops in-memory sessions, so the owner signs in again. Platform limits and the current publish matrix are in `docs/platform-support.md`.
 
-The public preview is [https://jackmiller825.github.io/Token-Campaign-Studio/](https://jackmiller825.github.io/Token-Campaign-Studio/). That site runs in the browser only: the workspace stays in local storage, provider credentials are absent, and a post is never marked published. Private `t.me/+` invite links are not stored in the repository; paste them in the link library if you still need them. The BuffaRumble marketing site stays at [https://bfram.site/](https://bfram.site/) from the BFRAM repository.
+The public preview is [https://token-campaign-studio.site/](https://token-campaign-studio.site/). That site runs in the browser only: the workspace stays in local storage, provider credentials are absent, and a post is never marked published. Private Telegram invite links are not stored in the repository; paste them in the link library if you still need them. The BuffaRumble marketing site stays at [https://bfram.site/](https://bfram.site/) from the BFRAM repository.
 
 ```bash
 npm run typecheck
