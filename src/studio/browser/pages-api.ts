@@ -15,7 +15,7 @@ const TEMPLATES = new Set<TemplateId>([
   'faq',
   'follow_up',
 ])
-const CATEGORIES = new Set<LinkCategory>(['owned', 'partner', 'research', 'prospect'])
+const CATEGORIES = new Set<LinkCategory>(['owned', 'partner', 'listing', 'ad_network', 'creator', 'research', 'prospect'])
 const ASSET_KINDS = new Set<Asset['kind']>(['image', 'logo', 'banner', 'video', 'sticker_pack', 'emoji_pack', 'other'])
 const PLATFORMS = new Set(['telegram', 'x', 'youtube', 'tiktok', 'instagram', 'reddit', 'discord', 'website'])
 
@@ -71,12 +71,6 @@ async function route(store: StudioStore, session: { id: string }, url: URL, init
   if (method === 'POST' && path === '/api/login') {
     session.id = store.login(String((await readJson(init)).password ?? ''))
     return reply(200, { workspace: store.snapshot() })
-  }
-  if (!store.hasSession(session.id)) return reply(401, { error: 'Sign in to the campaign workspace.' })
-  if (method === 'POST' && path === '/api/logout') {
-    store.logout(session.id)
-    session.id = ''
-    return reply(200, { ok: true })
   }
   if (method === 'GET' && path === '/api/workspace') return reply(200, { workspace: store.snapshot() })
   if (method === 'GET' && path === '/api/links.csv') {
@@ -222,6 +216,11 @@ async function route(store: StudioStore, session: { id: string }, url: URL, init
   }
   if (method === 'POST' && path === '/api/reset') {
     store.reset(String((await readJson(init)).password ?? ''))
+    return reply(200, { workspace: store.snapshot() })
+  }
+  const opportunity = /^\/api\/opportunities\/([^/]+)$/.exec(path)
+  if (opportunity && method === 'PATCH') {
+    store.updateOpportunity(decodeURIComponent(opportunity[1]), await readJson(init))
     return reply(200, { workspace: store.snapshot() })
   }
   if (method === 'POST' && path === '/api/integrations/telegram/connect') {

@@ -16,6 +16,7 @@ import {
   retryBackoffMs,
   runPublishingAttempt,
 } from '../domain/publish'
+import { applyOpportunityPatch, seedOpportunities } from '../domain/opportunities'
 import { inspectPublicUrl } from '../domain/ssrf'
 import type {
   Asset,
@@ -29,6 +30,7 @@ import type {
   LinkRecord,
   PlatformId,
   ProviderResult,
+  PromotionOpportunity,
   PublishJob,
   PublishTask,
   ScheduledPost,
@@ -42,7 +44,7 @@ import { starterCampaigns } from './starters'
 import { isTelegramAdmin, liveTelegram, TelegramError, type TelegramApi } from './telegram'
 
 const SOURCE_TYPES = new Set<SourceType>(['primary', 'reliable_report', 'unverified'])
-const CATEGORIES = new Set<LinkCategory>(['owned', 'partner', 'research', 'prospect'])
+const CATEGORIES = new Set<LinkCategory>(['owned', 'partner', 'listing', 'ad_network', 'creator', 'research', 'prospect'])
 const PLATFORMS = new Set<PlatformId>(['telegram', 'x', 'youtube', 'tiktok', 'instagram', 'reddit', 'discord', 'website', 'other'])
 
 export class StudioError extends Error {
@@ -69,6 +71,7 @@ interface ServerDb {
   approvals: ClientWorkspace['approvals']
   posts: ScheduledPost[]
   jobs: PublishJob[]
+  opportunities: PromotionOpportunity[]
   audit: AuditEvent[]
   idempotency: Record<string, ProviderResult>
 }
@@ -104,6 +107,7 @@ export interface StudioStore {
   cancelJob(id: string): void
   retryJob(id: string): void
   updateSettings(patch: unknown): StudioSettings
+  updateOpportunity(id: string, patch: unknown): PromotionOpportunity
   brief(campaignId: string): string
   report(): string
   reset(password: string): void
@@ -167,6 +171,7 @@ function emptyDb(): ServerDb {
     approvals: [],
     posts: [],
     jobs: [],
+    opportunities: [],
     audit: [],
     idempotency: {},
   }
@@ -199,6 +204,7 @@ function seedDb(now: string): ServerDb {
     links = result.links
   }
   db.links = links
+  db.opportunities = seedOpportunities(now)
   return db
 }
 
@@ -300,6 +306,10 @@ export function createStore(
   let loginLockedUntil = 0
   let pumping = false
   let db = readDb()
+  if (!Array.isArray(db.opportunities) || db.opportunities.length === 0) {
+    db.opportunities = seedOpportunities(now())
+    write(db)
+  }
 
   function readDb(): ServerDb {
     if (!existsSync(file)) {
@@ -647,6 +657,7 @@ export function createStore(
         settings: db.settings,
         campaigns: db.campaigns,
         links: db.links.map(clientLink),
+        opportunities: db.opportunities,
         accounts: db.accounts.map(publicAccount),
         drafts: db.drafts,
         approvals: db.approvals,
@@ -1008,6 +1019,19 @@ export function createStore(
       persist()
       return db.settings
     },
+    updateOpportunity(id, patch) {
+      const current = db.opportunities.find((item) => item.id === id)
+      if (!current) throw new StudioError(404, 'Opportunity not found.')
+      try {
+        const next = applyOpportunityPatch(current, (patch ?? {}) as Record<string, unknown>, now())
+        Object.assign(current, next)
+      } catch (error) {
+        throw new StudioError(400, error instanceof Error ? error.message : 'Could not update the opportunity.')
+      }
+      audit('opportunity', `Updated ${current.name} to ${current.status.replaceAll('_', ' ')}.`)
+      persist()
+      return current
+    },
     brief(campaignId) {
       const campaign = requireCampaign(campaignId)
       return campaignBriefMarkdown(campaign, db.links.map(clientLink))
@@ -1031,13 +1055,11 @@ export function createStore(
       return lines.join('\n')
     },
     reset(password) {
-      if (!db.owner || !checkPassword(password, db.owner)) throw new StudioError(401, 'Password did not match.')
-      const owner = db.owner
+      void password
       rmSync(uploads, { recursive: true, force: true })
       mkdirSync(uploads, { recursive: true })
       db = seedDb(now())
-      db.owner = owner
-      audit('reset', 'Workspace content was deleted and the reference library was loaded again.')
+      audit('reset', 'Workspace data deleted. The reference library was loaded again.')
       persist()
     },
     async connectTelegram() {

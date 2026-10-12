@@ -411,10 +411,8 @@ export function importCsv(
     const url = row[urlIndex]?.trim() ?? ''
     if (!url) continue
     const requested = (categoryIndex >= 0 ? row[categoryIndex] : '')?.trim().toLowerCase()
-    const category: LinkCategory =
-      requested === 'owned' || requested === 'partner' || requested === 'prospect' || requested === 'research'
-        ? requested
-        : 'research'
+    const allowed = new Set<string>(['owned', 'partner', 'listing', 'ad_network', 'creator', 'research', 'prospect'])
+    const category: LinkCategory = allowed.has(requested) ? (requested as LinkCategory) : 'research'
     const result = importLinkText(
       links,
       url,
@@ -478,8 +476,11 @@ export function linkPublishBlock(link: LinkRecord): string | null {
   if (link.privateInvite) return 'Invite links are private references. This app will not join or post to them.'
   if (link.kind === 'post') return 'A post URL is a reference to someone else’s message, not permission to publish.'
   if (link.category === 'research') return 'Research and reference records are not posting authorization.'
-  if (link.category === 'prospect') {
-    return 'A directory, profile, or prospect URL is not authorization. Paid placement needs owner review, budget approval, and a verified destination.'
+  if (link.category === 'prospect' || link.category === 'creator') {
+    return 'A prospect or creator lead is not authorization. Paid placement needs owner review, budget approval, and a verified destination.'
+  }
+  if (link.category === 'listing' || link.category === 'ad_network') {
+    return 'Listing forms and ad networks are opportunities to review, not destinations this app can post to.'
   }
   if (link.authorizationStatus !== 'verified' || !link.verifiedChatId) {
     return 'Publishing requires verified admin or OAuth access on a connected account. A URL alone is not enough.'

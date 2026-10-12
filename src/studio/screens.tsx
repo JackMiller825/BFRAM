@@ -17,7 +17,15 @@ export interface ScreenProps {
   routeId?: string
 }
 
-const categories: LinkCategory[] = ['research', 'prospect', 'owned', 'partner']
+const categories: { id: LinkCategory; label: string }[] = [
+  { id: 'research', label: 'Research/reference' },
+  { id: 'prospect', label: 'Outreach prospect' },
+  { id: 'listing', label: 'Token listing/data profile' },
+  { id: 'ad_network', label: 'Paid ad network' },
+  { id: 'creator', label: 'Creator/agency prospect' },
+  { id: 'owned', label: 'Owned publishing account' },
+  { id: 'partner', label: 'Authorized partner/paid placement' },
+]
 
 async function mutate(path: string, init: RequestInit, props: ScreenProps, message?: string) {
   const result = await workspaceRequest(path, init)
@@ -279,7 +287,7 @@ export function LinkLibrary(props: ScreenProps) {
         <input aria-label="Search links" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search" />
         <select aria-label="Category" value={category} onChange={(event) => setCategory(event.target.value)}>
           <option value="all">All categories</option>
-          {categories.map((item) => <option key={item} value={item}>{item}</option>)}
+          {categories.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
         </select>
         <label><input type="checkbox" checked={archived} onChange={(event) => setArchived(event.target.checked)} /> Show archived</label>
       </div>
@@ -324,7 +332,7 @@ function LinkDialog(props: ScreenProps & { link: LinkRecord; onClose: () => void
       <Field label="Display name"><input value={link.displayName} onChange={(event) => setLink({ ...link, displayName: event.target.value })} /></Field>
       <Field label="Category" hint="Changing category clears any verification. Research and prospect records cannot be queued.">
         <select value={link.category} onChange={(event) => setLink({ ...link, category: event.target.value as LinkCategory })}>
-          {categories.map((item) => <option key={item} value={item}>{item}</option>)}
+          {categories.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
         </select>
       </Field>
       <Field label="Notes"><textarea value={link.notes} onChange={(event) => setLink({ ...link, notes: event.target.value })} /></Field>
@@ -553,7 +561,7 @@ export function IntegrationsScreen(props: ScreenProps) {
 
 export function SettingsScreen(props: ScreenProps) {
   const [timezone, setTimezone] = useState(props.workspace.settings.timezone)
-  const [password, setPassword] = useState('')
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const quiet = props.workspace.settings.quietHours
   return (
     <div className="grid">
@@ -578,10 +586,11 @@ export function SettingsScreen(props: ScreenProps) {
             URL.revokeObjectURL(url)
           })}>Export links</button>
         </div>
-        <Field label="Confirm with the owner password">
-          <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" />
-        </Field>
-        <button className="danger" type="button" onClick={() => void mutate('/api/reset', { method: 'POST', body: JSON.stringify({ password }) }, props, 'Workspace reset.').catch((reason: unknown) => props.notify(reason instanceof Error ? reason.message : 'Reset failed'))}>Delete workspace data</button>
+        <label className="check">
+          <input type="checkbox" checked={confirmDelete} onChange={(event) => setConfirmDelete(event.target.checked)} />
+          Delete the workspace data in this browser or local server
+        </label>
+        <button className="danger" type="button" disabled={!confirmDelete} onClick={() => void mutate('/api/reset', { method: 'POST', body: '{}' }, props, 'Workspace reset.').catch((reason: unknown) => props.notify(reason instanceof Error ? reason.message : 'Reset failed'))}>Delete workspace data</button>
       </section>
       <section className="panel">
         <h2>Recent activity</h2>
@@ -601,11 +610,11 @@ export function AddLinksDialog(props: ScreenProps & { onClose: () => void }) {
     <Dialog title="Add links" onClose={props.onClose}>
       <p className="hint">Paste one URL or handle per line. New records default to research unless you choose another category. Verification is never inferred from the URL.</p>
       <Field label="Links"><textarea value={text} onChange={(event) => setText(event.target.value)} /></Field>
-      <Field label="Category">
-        <select value={category} onChange={(event) => setCategory(event.target.value as LinkCategory)}>
-          {categories.map((item) => <option key={item} value={item}>{item}</option>)}
-        </select>
-      </Field>
+        <Field label="Category">
+          <select value={category} onChange={(event) => setCategory(event.target.value as LinkCategory)}>
+            {categories.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+          </select>
+        </Field>
       <button className="primary" type="button" onClick={() => void workspaceRequest('/api/links/import', { method: 'POST', body: JSON.stringify({ text, category, tags: ['manual'] }) }).then((result) => {
         props.replaceWorkspace(result.workspace)
         props.notify('Links added. Exact duplicates were merged.')

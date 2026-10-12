@@ -17,7 +17,7 @@ const TEMPLATES = new Set<TemplateId>([
   'follow_up',
 ])
 
-const CATEGORIES = new Set<LinkCategory>(['owned', 'partner', 'research', 'prospect'])
+const CATEGORIES = new Set<LinkCategory>(['owned', 'partner', 'listing', 'ad_network', 'creator', 'research', 'prospect'])
 const ASSET_KINDS = new Set<Asset['kind']>(['image', 'logo', 'banner', 'video', 'sticker_pack', 'emoji_pack', 'other'])
 
 function send(res: ServerResponse, status: number, body: unknown, headers: Record<string, string> = {}): void {
@@ -40,10 +40,6 @@ function cookieValue(header: string | undefined, name: string): string {
     if (key === name) return decodeURIComponent(rest.join('='))
   }
   return ''
-}
-
-function sessionCookie(value: string, maxAge: number): string {
-  return `studio_session=${encodeURIComponent(value)}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${maxAge}`
 }
 
 async function readBody(req: IncomingMessage, limit: number): Promise<Buffer> {
@@ -105,28 +101,6 @@ export function createHandler(store: StudioStore) {
       }
       if (method !== 'GET' && method !== 'HEAD' && !sameOrigin(req)) {
         send(res, 403, { error: 'The request origin was rejected.' })
-        return
-      }
-      if (method === 'POST' && path === '/api/setup') {
-        const body = await readJson(req)
-        const session = store.setup(String(body.password ?? ''))
-        send(res, 200, { workspace: store.snapshot() }, { 'set-cookie': sessionCookie(session, 60 * 60 * 24 * 7) })
-        return
-      }
-      if (method === 'POST' && path === '/api/login') {
-        const body = await readJson(req)
-        const session = store.login(String(body.password ?? ''))
-        send(res, 200, { workspace: store.snapshot() }, { 'set-cookie': sessionCookie(session, 60 * 60 * 24 * 7) })
-        return
-      }
-      const session = cookieValue(req.headers.cookie, 'studio_session')
-      if (!store.hasSession(session)) {
-        send(res, 401, { error: 'Sign in to the campaign workspace.' })
-        return
-      }
-      if (method === 'POST' && path === '/api/logout') {
-        store.logout(session)
-        send(res, 200, { ok: true }, { 'set-cookie': sessionCookie('', 0) })
         return
       }
       if (method === 'GET' && path === '/api/workspace') {
@@ -352,6 +326,12 @@ export function createHandler(store: StudioStore) {
       if (method === 'POST' && path === '/api/reset') {
         const body = await readJson(req)
         store.reset(String(body.password ?? ''))
+        send(res, 200, { workspace: store.snapshot() })
+        return
+      }
+      const opportunity = /^\/api\/opportunities\/([^/]+)$/.exec(path)
+      if (opportunity && method === 'PATCH') {
+        store.updateOpportunity(decodeURIComponent(opportunity[1]), await readJson(req))
         send(res, 200, { workspace: store.snapshot() })
         return
       }

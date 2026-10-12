@@ -40,7 +40,7 @@ Local owner workspace for preparing disclosed drafts and publishing only to acco
 npm run studio
 ```
 
-Open [http://localhost:5173/studio](http://localhost:5173/studio). `npm run dev` serves the same app. The first visit asks for an owner password of at least 10 characters.
+Open [http://localhost:5173/studio](http://localhost:5173/studio). `npm run dev` serves the same app. The workspace opens directly; there is no password. Use Help inside the app for the full walkthrough.
 
 Optional environment variables live in `.env` (see `.env.example`). The server reads that file on startup and does not print the values. Leave them blank to keep every provider except a configured Telegram bot as “Integration unavailable”; drafts stay copyable and are never marked published.
 
@@ -57,7 +57,7 @@ Optional environment variables live in `.env` (see `.env.example`). The server r
 
 The database is `data/studio.json`, created on first run and gitignored. Uploads go in `data/uploads/`. Restarting the server keeps the database and drops in-memory sessions, so the owner signs in again. Platform limits and the current publish matrix are in `docs/platform-support.md`.
 
-The public preview is [https://token-campaign-studio.site/](https://token-campaign-studio.site/). That site runs in the browser only: the workspace stays in local storage, provider credentials are absent, and a post is never marked published. Private Telegram invite links are not stored in the repository; paste them in the link library if you still need them. The BuffaRumble marketing site stays at [https://bfram.site/](https://bfram.site/) from the BFRAM repository.
+The public preview is [https://token-campaign-studio.site/](https://token-campaign-studio.site/). That site runs in the browser only: the workspace stays in local storage, provider credentials are absent, and a post is never marked published. Help in the app explains campaigns, the link library, promotion opportunities, drafts, and the queue. Private Telegram invite links are not stored in the repository; paste them in the link library if you still need them. The BuffaRumble marketing site stays at [https://bfram.site/](https://bfram.site/) from the BFRAM repository.
 
 ```bash
 npm run typecheck

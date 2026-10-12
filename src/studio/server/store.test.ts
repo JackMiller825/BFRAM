@@ -30,6 +30,8 @@ describe('studio store', () => {
     expect(snap.links.reduce((sum, link) => sum + link.duplicateCount, 0)).toBe(supplied)
     expect(snap.links.some((link) => link.category === 'owned' || link.authorizationStatus === 'verified')).toBe(false)
     expect(snap.posts).toHaveLength(0)
+    expect(snap.opportunities.length).toBeGreaterThanOrEqual(20)
+    expect(snap.opportunities.some((item) => item.status === 'owner_submitted' || item.status === 'provider_confirmed')).toBe(false)
     expect(snap.links.find((link) => link.normalized === 'https://t.me/CRYPTO_RAVEN_CALL')?.duplicateCount).toBe(3)
     expect(snap.links.find((link) => link.normalized.includes('top100token.com'))?.category).toBe('prospect')
     expect(seedBatches.map((batch) => batch.lines).join('\n')).not.toMatch(/https?:\/\/t\.me\/\+/)

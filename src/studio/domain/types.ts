@@ -9,7 +9,19 @@ export type PlatformId =
   | 'website'
   | 'other'
 
-export type LinkCategory = 'owned' | 'partner' | 'research' | 'prospect'
+export type LinkCategory = 'owned' | 'partner' | 'listing' | 'ad_network' | 'creator' | 'research' | 'prospect'
+
+export type OpportunityGroup = 'listing' | 'advertising' | 'policy'
+
+export type OpportunityStatus =
+  | 'unreviewed'
+  | 'owner_approved'
+  | 'requirements_checked'
+  | 'application_prepared'
+  | 'owner_submitted'
+  | 'provider_confirmed'
+  | 'rejected'
+  | 'expired'
 
 export type AuthorizationStatus = 'unverified' | 'pending' | 'verified' | 'rejected'
 
@@ -152,6 +164,32 @@ export interface LinkRecord {
   likelyDuplicate: boolean
   archived: boolean
   privateInvite: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface PromotionOpportunity {
+  id: string
+  name: string
+  group: OpportunityGroup
+  url: string
+  summary: string
+  providerClaim: 'provider_reported' | 'policy_reference'
+  status: OpportunityStatus
+  redFlags: string[]
+  blocked: boolean
+  blockReason: string | null
+  diligence: Record<'deliverables' | 'audience' | 'reach' | 'fraud' | 'fees' | 'approval' | 'disclosure' | 'identity' | 'tracking', boolean>
+  quotedCost: string
+  referenceNumber: string
+  eligibilityNotes: string
+  submittedAt: string | null
+  followUpAt: string | null
+  lastChecked: string | null
+  sourceUrl: string
+  ownerApproved: boolean
+  spendApproved: boolean
+  disclosureRequired: boolean
   createdAt: string
   updatedAt: string
 }
@@ -318,6 +356,7 @@ export interface ClientWorkspace {
   settings: StudioSettings
   campaigns: Campaign[]
   links: LinkRecord[]
+  opportunities: PromotionOpportunity[]
   accounts: ConnectedAccount[]
   drafts: Draft[]
   approvals: Approval[]

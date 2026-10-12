@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { api, workspaceRequest } from './api'
+import { workspaceRequest } from './api'
 import type { ClientWorkspace } from './domain/types'
+import { HelpScreen, OpportunitiesScreen } from './guide'
 import {
   AddLinksDialog,
   AnalyticsScreen,
@@ -19,10 +20,12 @@ const NAV = [
   ['overview', 'Overview'],
   ['campaigns', 'Campaigns'],
   ['links', 'Link Library'],
+  ['opportunities', 'Opportunities'],
   ['studio', 'Content Studio'],
   ['queue', 'Calendar & Queue'],
   ['analytics', 'Analytics'],
   ['integrations', 'Integrations'],
+  ['help', 'Help'],
   ['settings', 'Settings'],
 ] as const
 
@@ -36,11 +39,8 @@ function readRoute(): { name: string; id?: string } {
 }
 
 export function StudioApp() {
-  const [session, setSession] = useState<{ needsSetup: boolean; authenticated: boolean } | null>(null)
   const [workspace, setWorkspace] = useState<ClientWorkspace | null>(null)
-  const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
-  const [password, setPassword] = useState('')
   const [route, setRoute] = useState(readRoute)
   const [adding, setAdding] = useState(false)
   const [offline, setOffline] = useState(false)
@@ -53,24 +53,17 @@ export function StudioApp() {
   }, [])
 
   useEffect(() => {
-    void api<{ needsSetup: boolean; authenticated: boolean }>('/api/session')
-      .then((next) => {
-        setSession(next)
-        setOffline(false)
-        if (next.authenticated) return workspaceRequest('/api/workspace')
-        return null
-      })
+    void workspaceRequest('/api/workspace')
       .then((result) => {
-        if (result) setWorkspace(result.workspace)
+        setWorkspace(result.workspace)
+        setOffline(false)
       })
-      .catch(() => {
-        setOffline(true)
-        setSession({ needsSetup: false, authenticated: false })
-      })
+      .catch(() => setOffline(true))
   }, [])
 
+  const ready = workspace !== null
   useEffect(() => {
-    if (!session?.authenticated) return
+    if (!ready) return undefined
     const source = new EventSource('/api/jobs/stream')
     source.addEventListener('progress', (event) => {
       const data = JSON.parse((event as MessageEvent).data) as { jobs: ClientWorkspace['jobs'] }
@@ -80,22 +73,10 @@ export function StudioApp() {
       }
     })
     return () => source.close()
-  }, [session?.authenticated])
+  }, [ready])
 
   function navigate(hash: string) {
     window.location.hash = hash
-  }
-
-  async function submitAuth(path: '/api/setup' | '/api/login') {
-    setError('')
-    try {
-      const result = await workspaceRequest(path, { method: 'POST', body: JSON.stringify({ password }) })
-      setWorkspace(result.workspace)
-      setSession({ needsSetup: false, authenticated: true })
-      setPassword('')
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'Sign-in failed')
-    }
   }
 
   if (offline) {
@@ -108,27 +89,9 @@ export function StudioApp() {
       </main>
     )
   }
-  if (!session || (session.authenticated && !workspace)) {
-    return <main className="auth"><p className="gate">Checking the workspace…</p></main>
+  if (!workspace) {
+    return <main className="auth"><p className="gate">Opening the workspace…</p></main>
   }
-  if (!session.authenticated) {
-    return (
-      <main className="auth">
-        <form className="gate" onSubmit={(event) => { event.preventDefault(); void submitAuth(session.needsSetup ? '/api/setup' : '/api/login') }}>
-          <h1>Token Campaign Studio</h1>
-          <p>Prepare disclosed drafts for accounts you control. This workspace does not send unsolicited messages, join groups, or post from a public link.</p>
-          {pagesPreview ? <p className="banner warn">This GitHub Pages preview keeps the workspace in this browser. It has no server credentials and cannot publish.</p> : null}
-          <label className="field">
-            <span>{session.needsSetup ? 'Create the owner password' : 'Owner password'}</span>
-            <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={session.needsSetup ? 'new-password' : 'current-password'} required minLength={10} />
-          </label>
-          {error ? <p className="banner bad" role="alert">{error}</p> : null}
-          <button className="primary" type="submit">{session.needsSetup ? 'Create workspace login' : 'Sign in'}</button>
-        </form>
-      </main>
-    )
-  }
-  if (!workspace) return null
 
   const screenProps = {
     workspace,
@@ -177,10 +140,12 @@ export function StudioApp() {
           {route.name === 'campaigns' ? <CampaignList {...screenProps} /> : null}
           {route.name === 'campaign' ? <CampaignEditor key={route.id} {...screenProps} /> : null}
           {route.name === 'links' ? <LinkLibrary {...screenProps} /> : null}
+          {route.name === 'opportunities' ? <OpportunitiesScreen {...screenProps} /> : null}
           {route.name === 'studio' ? <ContentStudio {...screenProps} /> : null}
           {route.name === 'queue' ? <QueueScreen {...screenProps} /> : null}
           {route.name === 'analytics' ? <AnalyticsScreen {...screenProps} /> : null}
           {route.name === 'integrations' ? <IntegrationsScreen {...screenProps} /> : null}
+          {route.name === 'help' ? <HelpScreen /> : null}
           {route.name === 'settings' ? <SettingsScreen {...screenProps} /> : null}
         </main>
       </div>
