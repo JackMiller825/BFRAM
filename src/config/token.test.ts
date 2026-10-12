@@ -4,6 +4,7 @@ import {
   canTrade,
   chartLink,
   confirmedAddress,
+  contractCopyText,
   contractStatusLine,
   displayTax,
   displayTicker,
@@ -40,14 +41,16 @@ describe('token configuration', () => {
     expect(explorerLink(tokenConfig).pendingLabel).toBe('Explorer link pending')
     expect(telegramLink(tokenConfig).pendingLabel).toBe('Telegram — link pending')
     expect(xLink(tokenConfig).pendingLabel).toBe('X — link pending')
-    expect(contractStatusLine(tokenConfig)).toBe('Contract address: Pending confirmation')
+    expect(contractCopyText(tokenConfig)).toBe('Coming Soon..')
+    expect(contractStatusLine(tokenConfig)).toBe('Contract address: Coming Soon..')
     expect(getConfigDiagnostics(tokenConfig)).toEqual([])
   })
 
-  it('does not enable copy for a valid address that is not confirmed', () => {
+  it('copies a valid address even when it is not confirmed', () => {
     const config = withConfig({ contractAddress: ADDRESS, contractConfirmed: false })
     expect(confirmedAddress(config)).toBeNull()
     expect(canCopyContract(config)).toBe(false)
+    expect(contractCopyText(config)).toBe(ADDRESS)
     expect(getConfigDiagnostics(config).some((issue) => issue.field === 'contractConfirmed')).toBe(true)
   })
 
@@ -129,8 +132,11 @@ describe('token configuration', () => {
   })
 
   it('shows pending tax text until a rate is configured', () => {
-    expect(displayTax(tokenConfig)).toBe('Pending confirmation')
+    expect(displayTax(tokenConfig)).toBe('0%')
+    expect(displayTax(withConfig({ buyTax: null, sellTax: null }))).toBe('Pending confirmation')
     expect(displayTax(withConfig({ buyTax: '1%', sellTax: null }))).toBe('1% / Pending confirmation')
-    expect(tokenDetailsNote(tokenConfig)).toMatch(/Details pending confirmation/)
+    expect(tokenDetailsNote(withConfig({ totalSupply: null, buyTax: null, sellTax: null }))).toMatch(
+      /Details pending confirmation/,
+    )
   })
 })

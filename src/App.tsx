@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { Community } from './components/Community'
-import { Faq } from './components/Faq'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
@@ -26,7 +25,6 @@ export function App({ config = tokenConfig }: { config?: TokenConfig }) {
         <TokenSection config={config} />
         <HowToBuy config={config} />
         <Community config={config} />
-        <Faq config={config} />
       </main>
       <Footer config={config} />
     </>

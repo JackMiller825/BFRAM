@@ -43,7 +43,6 @@ export function Story() {
             <span>Explore the playbook</span>
             <ArrowIcon />
           </ButtonLink>
-          <p className="fine-print">Independent characters. No team or league affiliation.</p>
         </div>
       </div>
     </Section>

@@ -1,5 +1,5 @@
 import { assetDimensions, assets } from '../config/assets'
-import { socialHelper, telegramLink, xLink, type TokenConfig } from '../config/token'
+import { telegramLink, xLink, type TokenConfig } from '../config/token'
 import { useTeamPreference, type Team } from '../hooks/useTeamPreference'
 import { CheckIcon, TelegramIcon, XIcon } from './Icons'
 import { ExternalLink } from './ExternalLink'
@@ -12,7 +12,6 @@ const TEAMS: { id: Team; name: string; line: string }[] = [
 
 export function Community({ config }: { config: TokenConfig }) {
   const { team, choose } = useTeamPreference()
-  const helper = socialHelper(config)
   const feedback = team === 'buffalo' ? 'You picked Team Buffalo.' : team === 'ram' ? 'You picked Team Ram.' : ''
 
   return (
@@ -62,7 +61,6 @@ export function Community({ config }: { config: TokenConfig }) {
               )
             })}
           </div>
-          <p className="fine-print">Your choice stays on this device. This is not a live vote.</p>
           <p className="team-feedback" role="status" aria-live="polite">
             {feedback}
           </p>
@@ -74,12 +72,6 @@ export function Community({ config }: { config: TokenConfig }) {
             <ExternalLink link={telegramLink(config)} icon={<TelegramIcon />} />
             <ExternalLink link={xLink(config)} icon={<XIcon />} />
           </div>
-          {helper ? <p className="helper">{helper}</p> : null}
-          <ul className="chips">
-            <li>Memes</li>
-            <li>Mascots</li>
-            <li>Friendly banter</li>
-          </ul>
         </div>
       </div>
     </Section>

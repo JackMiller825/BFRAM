@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export const SECTION_IDS = ['top', 'story', 'token', 'how-to-buy', 'community', 'faq'] as const
+export const SECTION_IDS = ['top', 'story', 'token', 'how-to-buy', 'community'] as const
 
 export type SectionId = (typeof SECTION_IDS)[number]
 

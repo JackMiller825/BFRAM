@@ -7,10 +7,9 @@ import { ButtonLink } from './ButtonLink'
 
 const NAV_ITEMS: { id: SectionId; label: string; href: string }[] = [
   { id: 'story', label: 'Story', href: sectionHref('story') },
-  { id: 'token', label: 'Token', href: sectionHref('token') },
+  { id: 'token', label: 'Tokenomics', href: sectionHref('token') },
   { id: 'how-to-buy', label: 'How to buy', href: sectionHref('how-to-buy') },
   { id: 'community', label: 'Community', href: sectionHref('community') },
-  { id: 'faq', label: 'FAQ', href: sectionHref('faq') },
 ]
 
 export function Header({ config }: { config: TokenConfig }) {

@@ -31,8 +31,25 @@ describe('BuffaRumble page', () => {
     render(<App />)
 
     expect(screen.getByRole('heading', { level: 1, name: /Big horns/ })).toBeInTheDocument()
-    expect(screen.getByText('Pre-launch. Official launch details pending confirmation.')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Copy unavailable' })).toBeDisabled()
+    expect(screen.queryByText('Pre-launch. Official launch details pending confirmation.')).not.toBeInTheDocument()
+    expect(screen.queryByText('Independent characters. No team or league affiliation.')).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Tokenomics' })).toBeInTheDocument()
+    expect(screen.getByText('1,000,000,000')).toBeInTheDocument()
+    expect(screen.getByText('0%')).toBeInTheDocument()
+    expect(screen.getByText('Burn')).toBeInTheDocument()
+    expect(screen.getByText('Renounce')).toBeInTheDocument()
+    expect(screen.getByText('Coming Soon..')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Copy address' })).toBeEnabled()
+    expect(screen.queryByText('Details pending confirmation. Verify official information before trading.')).not.toBeInTheDocument()
+    expect(screen.queryByText('Start with the basics. Verify every link.')).not.toBeInTheDocument()
+    expect(screen.queryByText(/Contract address:/)).not.toBeInTheDocument()
+    expect(screen.queryByText('Your choice stays on this device. This is not a live vote.')).not.toBeInTheDocument()
+    expect(screen.queryByText('Official links will appear here once confirmed.')).not.toBeInTheDocument()
+    expect(screen.queryByText('Memes')).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Common questions.' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('navigation', { name: 'Explore' })).not.toBeInTheDocument()
+    expect(screen.queryByText('Independent meme project. No team or league affiliation.')).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Back to top' })).not.toBeInTheDocument()
     expect(screen.getAllByRole('button', { name: 'Trading link pending' }).every((button) => button.hasAttribute('disabled'))).toBe(true)
     expect(screen.getAllByRole('button', { name: 'Telegram — link pending' }).length).toBeGreaterThan(0)
     expect(screen.queryByRole('link', { name: /Trade \$BFRAM/ })).not.toBeInTheDocument()
@@ -42,11 +59,25 @@ describe('BuffaRumble page', () => {
       expect(link.getAttribute('href')).not.toBe('')
     }
 
-    expect(screen.getByRole('button', { name: 'What is BuffaRumble?' })).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getByText(/independent Ethereum meme project/)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Is this an official sports project?' })).toHaveAttribute('aria-expanded', 'false')
     expect(warn).not.toHaveBeenCalled()
     warn.mockRestore()
+  })
+
+  it('copies Coming Soon when the contract address is not published', async () => {
+    const user = userEvent.setup()
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    })
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Copy address' }))
+    expect(writeText).toHaveBeenCalledWith('Coming Soon..')
+    expect(screen.getByRole('button', { name: 'Copied!' })).toBeInTheDocument()
+
+    render(<TokenSection config={{ ...tokenConfig, contractAddress: ADDRESS, contractConfirmed: false }} />)
+    await user.click(screen.getAllByRole('button', { name: 'Copy address' })[0]!)
+    expect(writeText).toHaveBeenCalledWith(ADDRESS)
   })
 
   it('opens the menu, moves with the keyboard, and restores focus on Escape', async () => {
@@ -58,22 +89,12 @@ describe('BuffaRumble page', () => {
     expect(closer).toHaveAttribute('aria-expanded', 'true')
 
     const nav = screen.getByRole('navigation', { name: 'Primary' })
-    await user.click(within(nav).getByRole('link', { name: 'FAQ' }))
+    await user.click(within(nav).getByRole('link', { name: 'Tokenomics' }))
     expect(screen.getByRole('button', { name: 'Open menu' })).toHaveAttribute('aria-expanded', 'false')
 
     await user.click(screen.getByRole('button', { name: 'Open menu' }))
     await user.keyboard('{Escape}')
     expect(screen.getByRole('button', { name: 'Open menu' })).toHaveFocus()
-  })
-
-  it('toggles FAQ answers from the keyboard', async () => {
-    const user = userEvent.setup()
-    render(<App />)
-    const question = screen.getByRole('button', { name: 'Is this an official sports project?' })
-    question.focus()
-    await user.keyboard('{Enter}')
-    expect(question).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getByText('No. It is an independent project with no team or league affiliation.')).toBeInTheDocument()
   })
 
   it('stores a local team choice and still works when storage is blocked', async () => {
@@ -123,6 +144,7 @@ describe('BuffaRumble page', () => {
     expect(screen.getByText(ADDRESS)).toBeInTheDocument()
 
     writeText.mockRejectedValueOnce(new Error('denied'))
+    Object.defineProperty(document, 'execCommand', { configurable: true, value: () => false })
     render(<TokenSection config={readyConfig()} />)
     await user.click(screen.getAllByRole('button', { name: 'Copy address' })[0]!)
     expect(screen.getByText('Could not copy. Select and copy the address manually.')).toBeInTheDocument()
@@ -151,7 +173,7 @@ describe('BuffaRumble page', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     render(<App config={{ ...tokenConfig, contractAddress: 'not-an-address', tradeUrl: 'notaurl', tradingConfirmed: true }} />)
     expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Copy unavailable' })).toBeDisabled()
+    expect(screen.getAllByRole('button', { name: 'Copy address' }).every((button) => !button.hasAttribute('disabled'))).toBe(true)
     expect(screen.getAllByRole('button', { name: 'Trading link pending' })[0]).toBeDisabled()
     expect(warn).toHaveBeenCalled()
     warn.mockRestore()

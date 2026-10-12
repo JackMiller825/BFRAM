@@ -16,6 +16,7 @@
  */
 
 export const PENDING = 'Pending confirmation'
+export const COMING_SOON = 'Coming Soon..'
 
 export type LaunchStatus = 'prelaunch' | 'live'
 
@@ -51,11 +52,11 @@ export const tokenConfig: TokenConfig = {
   tagline: 'Big horns. Tiny helmets. Maximum rumble.',
   launchStatus: 'prelaunch',
   contractAddress: null,
-  totalSupply: null,
-  buyTax: null,
-  sellTax: null,
-  liquidityStatus: null,
-  ownershipStatus: null,
+  totalSupply: '1,000,000,000',
+  buyTax: '0%',
+  sellTax: '0%',
+  liquidityStatus: 'Burn',
+  ownershipStatus: 'Renounce',
   launchAt: null,
   telegramUrl: null,
   xUrl: null,
@@ -115,6 +116,12 @@ export function confirmedAddress(config: TokenConfig): string | null {
   return isEthereumAddress(raw) ? raw : null
 }
 
+/** Text the copy button writes. A valid address copies even before it is published. */
+export function contractCopyText(config: TokenConfig): string {
+  const raw = config.contractAddress?.trim() ?? ''
+  return isEthereumAddress(raw) ? raw : COMING_SOON
+}
+
 export function canCopyContract(config: TokenConfig): boolean {
   return confirmedAddress(config) !== null
 }
@@ -162,12 +169,12 @@ export function displayTax(config: TokenConfig): string {
   const buy = typeof config.buyTax === 'string' ? config.buyTax.trim() : ''
   const sell = typeof config.sellTax === 'string' ? config.sellTax.trim() : ''
   if (!buy && !sell) return PENDING
+  if (buy && sell && buy === sell) return buy
   return `${buy || PENDING} / ${sell || PENDING}`
 }
 
 export function contractStatusLine(config: TokenConfig): string {
-  const address = confirmedAddress(config)
-  return address ? `Contract address: ${address}` : 'Contract address: Pending confirmation'
+  return `Contract address: ${contractCopyText(config)}`
 }
 
 export function tokenDetailsNote(config: TokenConfig): string {
@@ -239,7 +246,7 @@ export function getConfigDiagnostics(config: TokenConfig): ConfigDiagnostic[] {
     issues.push({
       field: 'contractAddress',
       message:
-        'Contract address is not a valid Ethereum address (0x and 40 hex characters). Copy stays unavailable.',
+        'Contract address is not a valid Ethereum address (0x and 40 hex characters). The page shows Coming Soon.. and that text can be copied.',
     })
   }
 
@@ -247,14 +254,14 @@ export function getConfigDiagnostics(config: TokenConfig): ConfigDiagnostic[] {
     issues.push({
       field: 'contractConfirmed',
       message:
-        'A contract address is present but contractConfirmed is false. Copy stays unavailable until the address is officially confirmed.',
+        'A contract address is present but contractConfirmed is false. The address can still be copied. Trading stays unavailable until the address is officially confirmed.',
     })
   }
 
   if (config.contractConfirmed && !isEthereumAddress(config.contractAddress)) {
     issues.push({
       field: 'contractConfirmed',
-      message: 'contractConfirmed is true but contractAddress is missing or invalid. Copy stays unavailable.',
+      message: 'contractConfirmed is true but contractAddress is missing or invalid. The page shows Coming Soon.. until a valid address is set.',
     })
   }
 

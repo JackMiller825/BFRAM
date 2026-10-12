@@ -31,9 +31,6 @@ export function Hero({ config }: { config: TokenConfig }) {
               How to buy
             </ButtonLink>
           </div>
-          {config.launchStatus === 'prelaunch' ? (
-            <p className="status-note">Pre-launch. Official launch details pending confirmation.</p>
-          ) : null}
         </div>
         <div className="hero-frame">
           <img

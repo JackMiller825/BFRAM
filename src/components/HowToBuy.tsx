@@ -1,6 +1,6 @@
 import { assetDimensions, assets } from '../config/assets'
-import { contractStatusLine, displayTicker, tradeLink, type TokenConfig } from '../config/token'
-import { EthIcon, LockIcon, SearchIcon, SwapIcon, WalletIcon } from './Icons'
+import { displayTicker, tradeLink, type TokenConfig } from '../config/token'
+import { EthIcon, SearchIcon, SwapIcon, WalletIcon } from './Icons'
 import { ExternalLink } from './ExternalLink'
 import { Section } from './Section'
 
@@ -32,7 +32,6 @@ export function HowToBuy({ config }: { config: TokenConfig }) {
       <p className="eyebrow">HOW TO BUY</p>
       <div className="section-heading">
         <h2 id="buy-title">Four steps to the huddle.</h2>
-        <p className="lede">Start with the basics. Verify every link.</p>
       </div>
       <ol className="step-grid">
         {steps.map((step, index) => (
@@ -49,12 +48,6 @@ export function HowToBuy({ config }: { config: TokenConfig }) {
         ))}
       </ol>
       <div className="buy-status">
-        <p>
-          <span className="status-icon" aria-hidden="true">
-            <LockIcon />
-          </span>
-          <span className="contract-address">{contractStatusLine(config)}</span>
-        </p>
         <ExternalLink link={tradeLink(config)} icon={<SwapIcon />} />
       </div>
       <img
