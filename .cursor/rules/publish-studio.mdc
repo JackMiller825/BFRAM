@@ -1,0 +1,12 @@
+---
+description: Push Token Campaign Studio updates to its GitHub repo and GitHub Pages
+alwaysApply: true
+---
+
+# Publish Token Campaign Studio
+
+After a requested code change in this workspace, commit it and push `main` to `https://github.com/JackMiller825/Token-Campaign-Studio.git` on the `studio` remote. Do not change `origin`, which stays `https://github.com/JackMiller825/BFRAM.git`, and do not push to that BFRAM remote unless the user asks.
+
+The studio repository publishes with `.github/workflows/pages.yml`. Its live site is `https://jackmiller825.github.io/Token-Campaign-Studio/`. That build is a browser preview: do not include `public/CNAME` (`bfram.site`) in its Pages artifact.
+
+Do not commit `data/`, `.env`, or private `t.me/+` invite URLs. Do not force-push.

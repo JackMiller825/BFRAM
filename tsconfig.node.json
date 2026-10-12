@@ -17,5 +17,12 @@
     "noUncheckedSideEffectImports": true,
     "types": ["node"]
   },
-  "include": ["vite.config.ts", "src/config/token.ts", "src/config/metadata.ts"]
+  "include": [
+    "vite.config.ts",
+    "src/config/token.ts",
+    "src/config/metadata.ts",
+    "src/studio/domain/**/*.ts",
+    "src/studio/server/**/*.ts"
+  ],
+  "exclude": ["src/**/*.test.ts"]
 }

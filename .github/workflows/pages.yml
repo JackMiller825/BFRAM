@@ -28,7 +28,18 @@ jobs:
       - name: Install
         run: npm ci
       - name: Build
+        env:
+          VITE_BASE: ${{ github.repository == 'JackMiller825/BFRAM' && '/' || '/Token-Campaign-Studio/' }}
+          VITE_SITE: ${{ github.repository == 'JackMiller825/BFRAM' && 'marketing' || 'studio' }}
         run: npm run build
+      - name: Publish the studio preview on its project URL
+        if: github.repository != 'JackMiller825/BFRAM'
+        run: |
+          rm -f dist/CNAME
+          if [ -f dist/studio.html ]; then
+            mv dist/index.html dist/bfram.html
+            mv dist/studio.html dist/index.html
+          fi
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
