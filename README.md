@@ -34,15 +34,27 @@ Invalid addresses and links stay disabled and log a development warning. They do
 
 ## Token Campaign Studio
 
-Local owner workspace for preparing disclosed drafts and publishing only to accounts that are actually connected. The public site build does not include this server. Reference links, including the seeded Telegram, X, YouTube, and directory URLs, are not posting targets.
+Workspace for preparing disclosed token-campaign drafts and publishing only to accounts the owner has actually authorized. It does not send unsolicited messages, join groups, or treat a saved URL as permission to post. Help inside the app is the step-by-step guide.
 
 ```bash
 npm run studio
 ```
 
-Open [http://localhost:5173/studio](http://localhost:5173/studio). `npm run dev` serves the same app. The workspace opens directly; there is no password. Use Help inside the app for the full walkthrough.
+Open [http://localhost:5173/studio](http://localhost:5173/studio). `npm run dev` serves the same app. The workspace opens with no password.
 
-Optional environment variables live in `.env` (see `.env.example`). The server reads that file on startup and does not print the values. Leave them blank to keep every provider except a configured Telegram bot as “Integration unavailable”; drafts stay copyable and are never marked published.
+Screens: Overview, Campaigns, Link Library, Opportunities, Content Studio, Calendar & Queue, Analytics, Integrations, Help, Settings.
+
+What works now:
+
+- Campaign briefs with autosave, claims checks, and an export. Northwind Acorns is a labeled fictional demo. The BuffaRumble campaign uses only facts already on the public site.
+- Link library with paste, CSV import and export, tags, search, archive, and duplicate detection. Seeded Telegram, X, YouTube, and directory links are unverified research or prospect records. Categories are owned publishing account, authorized partner, listing profile, paid ad network, creator prospect, research/reference, and outreach prospect. Only a verified owned account, or a partner with budget approval and a sponsorship disclosure, can reach the queue.
+- Promotion opportunities, kept separate from the link library: official listing forms, unvetted ad prospects, and policy pages. Status moves one step at a time from unreviewed through owner approval, requirements, a prepared application, an owner-recorded submission, and provider confirmation, rejection, or expiry. Preparing an application does not mark it submitted. Advertising needs an explicit spend approval and the due-diligence checklist. Manipulation offers stay blocked. Prices and eligibility are not stored.
+- Editable drafts, review, a timezone-aware queue, pause controls, and progress counted from finished tasks. A post is marked published only after the provider confirms it.
+- Telegram publishing on a local server, after `TELEGRAM_BOT_TOKEN` is set and `getChatMember` shows that bot as administrator or creator of the destination chat.
+
+What still needs a real provider connection: X, YouTube, TikTok, Instagram, Reddit, and Discord stay “Integration unavailable.” Their drafts can be copied or exported. The app does not fetch user-supplied websites, connect wallets, or request seed phrases. Private Telegram invite links are not in the repository; paste them into the library if you need them locally.
+
+Optional environment variables live in `.env` (see `.env.example`). The server reads that file on startup and does not print the values.
 
 | Variable | Purpose |
 | --- | --- |
@@ -55,15 +67,8 @@ Optional environment variables live in `.env` (see `.env.example`). The server r
 | `REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET` | Detected, not used |
 | `DISCORD_BOT_TOKEN` | Detected, not used |
 
-The database is `data/studio.json`, created on first run and gitignored. Uploads go in `data/uploads/`. Restarting the server keeps the database and drops in-memory sessions, so the owner signs in again. Platform limits and the current publish matrix are in `docs/platform-support.md`.
+Local data is `data/studio.json`, created on first run and gitignored, with uploads in `data/uploads/`. Restarting the server keeps that file. Platform limits and the publish matrix are in `docs/platform-support.md`.
 
-The public preview is [https://token-campaign-studio.site/](https://token-campaign-studio.site/). That site runs in the browser only: the workspace stays in local storage, provider credentials are absent, and a post is never marked published. Help in the app explains campaigns, the link library, promotion opportunities, drafts, and the queue. Private Telegram invite links are not stored in the repository; paste them in the link library if you still need them. The BuffaRumble marketing site stays at [https://bfram.site/](https://bfram.site/) from the BFRAM repository.
+The public preview is [https://token-campaign-studio.site/](https://token-campaign-studio.site/). It runs in the browser only: edits stay in local storage, provider credentials are absent, and nothing is marked published. A push to `JackMiller825/Token-Campaign-Studio` builds that preview and publishes it with GitHub Pages on `token-campaign-studio.site`. A push to `JackMiller825/BFRAM` keeps the marketing build and `bfram.site`.
 
-```bash
-npm run typecheck
-npm run lint
-npm run test
-npm run build
-```
-
-`npm run build` still produces the static marketing site in `dist/`. The studio API runs only inside `npm run studio` or `npm run dev`. A push to `JackMiller825/Token-Campaign-Studio` builds the browser preview and publishes it with GitHub Pages. A push to `JackMiller825/BFRAM` keeps the marketing build and the `bfram.site` domain.
+`npm run build` writes the static marketing site to `dist/`. The studio API runs only with `npm run studio` or `npm run dev`. Checks are `npm run typecheck`, `npm run lint`, and `npm run test`.
